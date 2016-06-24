@@ -63,9 +63,9 @@ line 1057 is the interpreter loop. On line 1167,
             oparg = NEXTARG();  
 
 HAS__ARG is defined in Include/opcode.h line 166.
-    #define HAS_ARG(op) ((op >= HAVE_ARGUMENT))
+	#define HAS_ARG(op) ((op >= HAVE_ARGUMENT))
 HAVE_ARGUMENT is defined in line 94.
-    #define HAVE_ARGUMENT 90
+	#define HAVE_ARGUMENT 90
 The opcode less than 90 does not take an argument and opcode larger than 90
 takes argument.
 
