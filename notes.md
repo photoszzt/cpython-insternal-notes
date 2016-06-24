@@ -7,39 +7,39 @@ frees the allocated memory.
 
 python program:
 
-x= 10
-def foo(x):
-    y = x * 2
-    return bar(y)
+    x= 10
+    def foo(x):
+        y = x * 2
+        return bar(y)
 
-def bar(x):
-    y = x / 2
-    return y
-z = foo(x)
+    def bar(x):
+        y = x / 2
+        return y
+    z = foo(x)
 
 The corresponding python bytecode:
 
-$ python -m dis test.py
- 1           0 LOAD_CONST               0 (10)
-             3 STORE_NAME               0 (x)
+    $ python -m dis test.py
+    1           0 LOAD_CONST               0 (10)
+                3 STORE_NAME               0 (x)
 
- 2           6 LOAD_CONST               1 (<code object foo at 0x7fbefd022830, file "test.py", line 2>)
-             9 MAKE_FUNCTION            0
-            12 STORE_NAME               1 (foo)
+    2           6 LOAD_CONST               1 (<code object foo at 0x7fbefd022830, file "test.py", line 2>)
+                9 MAKE_FUNCTION            0
+               12 STORE_NAME               1 (foo)
 
- 6          15 LOAD_CONST               2 (<code object bar at 0x7fbefd022630, file "test.py", line 6>)
-            18 MAKE_FUNCTION            0
-            21 STORE_NAME               2 (bar)
+    6          15 LOAD_CONST               2 (<code object bar at 0x7fbefd022630, file "test.py", line 6>)
+               18 MAKE_FUNCTION            0
+               21 STORE_NAME               2 (bar)
 
-10          24 LOAD_NAME                1 (foo)
-            27 LOAD_NAME                0 (x)
-            30 CALL_FUNCTION            1
-            33 STORE_NAME               3 (z)
-            36 LOAD_CONST               3 (None)
-            39 RETURN_VALUE        
+    10         24 LOAD_NAME                1 (foo)
+               27 LOAD_NAME                0 (x)
+               30 CALL_FUNCTION            1
+               33 STORE_NAME               3 (z)
+               36 LOAD_CONST               3 (None)
+               39 RETURN_VALUE
 
->>> c = compile(open('test.py').read(), 'test.py', 'exec')
->>> c.co_code() # shows the bytecode in string
+    >>> c = compile(open('test.py').read(), 'test.py', 'exec')
+    >>> c.co_code() # shows the bytecode in string
 
 Python interpreter:
 ceval.c file contains the main interpreter loop
