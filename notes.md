@@ -57,10 +57,10 @@ The following code is on line 1012 from cevel.c in Python dir.
 line 1057 is the interpreter loop. On line 1167, 
 
     opcode = NEXTOP() // Get the opcode
-    oparg = 0;   /* allows oparg to be stored in a register because         
-            it doesn't have to be remembered across a full loop */              
-        if (HAS_ARG(opcode))                                                    
-            oparg = NEXTARG();  
+    oparg = 0;   /* allows oparg to be stored in a register because
+            it doesn't have to be remembered across a full loop */
+    if (HAS_ARG(opcode))
+        oparg = NEXTARG();
 
 HAS__ARG is defined in Include/opcode.h line 166.
 
