@@ -218,8 +218,63 @@ by the f_back pointer. In the example code, it will be
 
     global <-- foo <-- bar
 
+f_code is the code that's executing in this frame. It also contains pointer to 
+what global variables it can access (f_globals). There is value stack. Each frame
+has its own private value stack(f_valuestack). Hopefully, when you exit this frame,
+the frame's value stack should be empty othervise there will be memory leak. 
+The last one f_localsplus is an optimization. The frame's value stack is placed 
+right after the locals. Conceptually, there are two things: a set of local variables 
+for the function and a value stack. It knows how many local variables at compile time 
+and the value stack are sized dynamically.
 
+PyEval_EvalFrameEx takes a frame object, execute the frame and return the return value. 
 
+A code object contains byte code strings and other sementic information such as
+constants, variable names. A function has code object and environment. A frame
+also has code object and environment. Frame is the representation of code at runtime. 
+Function object is a static thing at compile time.
 
-## Function frame stack
+	TARGET(CALL_FUNCTION)
+        {
+            PyObject **sp;
+            PCALL(PCALL_ALL);
+            sp = stack_pointer;
+	#ifdef WITH_TSC
+            x = call_function(&sp, oparg, &intr0, &intr1);
+	#else
+            x = call_function(&sp, oparg);
+	#endif
+            stack_pointer = sp;
+            PUSH(x);
+            if (x != NULL) DISPATCH();
+            break;
+        }
+
+CALL_FUNCTION opcode call the function by the c function call_function and 
+leave the return value on the stack. 
+
+The call_function on line 4309
+
+	int na = oparg & 0xff;
+    int nk = (oparg>>8) & 0xff;
+    int n = na + 2 * nk;
+    PyObject **pfunc = (*pp_stack) - n - 1;
+    PyObject *func = *pfunc;
+    PyObject *x, *w;
+
+This code grap the arguments from value stack. 
+
+There are different kinds of function like c function. PyFunction_Check will
+check whether you are a normal python function then it will goto fast_function. 
+It will create a new frame with code and globals. 
+
+        fastlocals = f->f_localsplus; //
+        stack = (*pp_stack) - n; // old stask
+
+        for (i = 0; i < n; i++) { // copy the parameter
+            Py_INCREF(*stack);
+            fastlocals[i] = *stack++;
+        }
+
+This code copies the arguments to the new frame.
 
